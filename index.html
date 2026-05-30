@@ -21,17 +21,33 @@
 
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-            background: var(--bg);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #2563EB 50%, #06b6d4 75%, #10b981 100%);
+            background-size: 400% 400%;
+            animation: gradientDrift 12s ease infinite;
             color: var(--text-main);
-            padding: 36px 20px 60px;
+            padding: 36px 20px 80px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientDrift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
             max-width: 680px;
             width: 100%;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 24px;
+            padding: 32px 28px 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
         }
 
         /* ---- Header ---- */
@@ -39,50 +55,59 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 40px;
+            gap: 12px;
+            margin-bottom: 36px;
         }
-        header .logo-icon {
-            color: var(--primary);
+        .logo-icon {
+            color: #fff;
             display: flex;
+            animation: batteryPulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.8));
         }
-        header .logo-icon svg { width: 28px; height: 28px; }
+        .logo-icon svg { width: 32px; height: 32px; }
+
+        @keyframes batteryPulse {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px rgba(255,255,255,0.6)); }
+            50%       { transform: scale(1.15); filter: drop-shadow(0 0 14px rgba(255,255,255,1)); }
+        }
+
         header h1 {
-            font-size: 21px;
-            font-weight: 700;
-            color: #111827;
-            letter-spacing: -0.01em;
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.02em;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.2);
         }
 
         /* ---- Section ---- */
-        .step-section {
-            margin-bottom: 28px;
-        }
+        .step-section { margin-bottom: 24px; }
 
         .step-label {
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--primary);
+            color: #fff;
             margin-bottom: 14px;
             padding-bottom: 10px;
-            border-bottom: 2px solid var(--border);
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.2);
         }
 
         .step-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            background: var(--primary);
-            color: #fff;
+            background: rgba(255,255,255,0.9);
+            color: var(--primary);
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         /* ---- Card Grid ---- */
@@ -95,9 +120,10 @@
         .step-card {
             aspect-ratio: 1;
             position: relative;
-            background: var(--card-bg);
-            border: 2px solid var(--border);
-            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.85);
+            border: 2px solid rgba(255,255,255,0.6);
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -106,33 +132,49 @@
             padding: 10px 8px;
             cursor: pointer;
             user-select: none;
-            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+            transition: transform 0.18s cubic-bezier(.34,1.56,.64,1),
+                        border-color 0.18s ease,
+                        background 0.18s ease,
+                        box-shadow 0.18s ease;
+            opacity: 0;
+            animation: cardAppear 0.45s cubic-bezier(.34,1.56,.64,1) forwards;
+            animation-delay: var(--delay, 0s);
+        }
+
+        @keyframes cardAppear {
+            from { opacity: 0; transform: scale(0.7) translateY(20px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
         }
 
         .step-card:not(.empty):hover {
-            transform: scale(1.04);
-            border-color: #93C5FD;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+            transform: scale(1.07) translateY(-2px);
+            border-color: rgba(37,99,235,0.7);
+            background: rgba(255,255,255,0.97);
+            box-shadow: 0 8px 24px rgba(37,99,235,0.25);
         }
 
         .step-card.active {
             border-color: var(--primary);
-            background: var(--primary-light);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.25), 0 8px 24px rgba(37,99,235,0.3);
+            animation: cardAppear 0.45s cubic-bezier(.34,1.56,.64,1) forwards, activeGlow 1.8s ease-in-out infinite 0.45s;
+        }
+
+        @keyframes activeGlow {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(37,99,235,0.25), 0 8px 24px rgba(37,99,235,0.3); }
+            50%       { box-shadow: 0 0 0 5px rgba(37,99,235,0.4),  0 8px 32px rgba(37,99,235,0.5); }
         }
 
         .step-card.empty {
-            background: #F9FAFB;
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.2);
             pointer-events: none;
-            opacity: 0.28;
         }
 
         .step-card.warning {
             border-style: dashed;
             border-color: var(--warning);
-        }
-        .step-card.warning:hover {
-            border-color: #D97706;
-            box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+            background: rgba(255,251,235,0.9);
         }
 
         .card-num {
@@ -140,17 +182,16 @@
             top: 7px;
             left: 8px;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             line-height: 1;
             color: var(--primary);
             background: var(--primary-light);
-            width: 17px;
-            height: 17px;
-            border-radius: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.15s, color 0.15s;
         }
 
         .step-card.active .card-num {
@@ -158,57 +199,80 @@
             color: #fff;
         }
 
-        .step-card.warning .card-num {
-            color: var(--warning);
-            background: #FFFBEB;
-        }
+        .step-card.warning .card-num { color: var(--warning); background: #FFFBEB; }
 
         .card-icon {
             color: #9CA3AF;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.15s;
+            transition: color 0.18s, transform 0.18s;
         }
         .card-icon svg { width: 26px; height: 26px; }
 
-        .step-card.active .card-icon { color: var(--primary); }
+        .step-card:not(.empty):hover .card-icon { transform: scale(1.2) rotate(-5deg); }
+        .step-card.active .card-icon { color: var(--primary); transform: scale(1.1); }
         .step-card.warning .card-icon { color: var(--warning); }
 
         .card-label {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             text-align: center;
             line-height: 1.4;
             color: var(--text-main);
         }
 
         .card-meta {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-muted);
             text-align: center;
             line-height: 1.3;
         }
 
+        /* ---- Ripple ---- */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(37,99,235,0.25);
+            transform: scale(0);
+            animation: rippleOut 0.55s ease-out forwards;
+            pointer-events: none;
+        }
+        @keyframes rippleOut {
+            to { transform: scale(4); opacity: 0; }
+        }
+
         /* ---- Animations ---- */
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-14px); }
+            from { opacity: 0; transform: translateY(-18px); }
             to   { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(14px); }
+            from { opacity: 0; transform: translateY(18px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-
-        .anim-slide-down { animation: slideDown 0.32s ease both; }
-        .anim-fade-up    { animation: fadeUp 0.36s ease both; }
+        .anim-slide-down { animation: slideDown 0.35s cubic-bezier(.22,1,.36,1) both; }
+        .anim-fade-up    { animation: fadeUp   0.4s  cubic-bezier(.22,1,.36,1) both; }
 
         /* ---- Result ---- */
         .result-box {
-            background: var(--card-bg);
-            border: 2px solid var(--primary);
-            border-radius: 14px;
+            position: relative;
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
             padding: 22px;
+            overflow: hidden;
+        }
+        .result-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            padding: 2.5px;
+            background: linear-gradient(135deg, #667eea, #2563EB, #06b6d4, #10b981);
+            background-size: 300% 300%;
+            animation: gradientDrift 4s ease infinite;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         .product-cards {
@@ -222,12 +286,17 @@
         .product-card {
             background: #F8FAFC;
             border: 1.5px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 14px 16px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         }
         .product-card.primary {
             border-color: var(--primary);
-            background: var(--primary-light);
+            background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
         }
 
         .product-card-label {
@@ -258,24 +327,26 @@
             gap: 6px;
             margin-top: 12px;
             padding: 8px 14px;
-            background: #FF9900;
-            color: #111827;
+            background: linear-gradient(135deg, #FF9900, #FF6600);
+            color: #fff;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 800;
             text-decoration: none;
             border-radius: 8px;
-            transition: background 0.15s ease, transform 0.15s ease;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 3px 10px rgba(255,102,0,0.35);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.15);
         }
         .buy-btn:hover {
-            background: #E88A00;
-            transform: translateY(-1px);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 6px 16px rgba(255,102,0,0.5);
         }
         .buy-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
         .reason-box {
-            background: #F8FAFC;
+            background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
             border-left: 4px solid var(--primary);
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 10px 10px 0;
             padding: 12px 16px;
         }
         .reason-label {
@@ -293,7 +364,7 @@
         .reason-text {
             font-size: 13px;
             color: #374151;
-            line-height: 1.7;
+            line-height: 1.75;
         }
 
         .note-box {
@@ -311,9 +382,19 @@
         }
         .note-box svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; }
 
+        /* ---- Confetti canvas ---- */
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
         /* ---- Responsive ---- */
         @media (max-width: 480px) {
-            body { padding: 24px 14px 48px; }
+            body { padding: 20px 12px 60px; }
+            .container { padding: 24px 16px 32px; border-radius: 20px; }
             .step-grid { gap: 7px; }
             .card-icon svg { width: 20px; height: 20px; }
             .card-label { font-size: 10px; }
@@ -323,6 +404,7 @@
     </style>
 </head>
 <body>
+<canvas id="confetti-canvas"></canvas>
 <div class="container">
 
     <header>
@@ -349,7 +431,7 @@
     <section class="step-section" id="result-section" style="display:none">
         <div class="step-label">
             <span class="step-badge">3</span>
-            あなたへのおすすめ
+            あなたへのおすすめ ✨
         </div>
         <div class="result-box" id="result-box"></div>
     </section>
@@ -357,28 +439,28 @@
 </div>
 
 <script>
+    /* ===================== DATA ===================== */
     const step1Options = [
-        { id: "1", label: "スマホ\n1回",      icon: "smartphone", meta: "5000 mAh" },
-        { id: "2", label: "スマホ\n2回",      icon: "smartphone", meta: "10000 mAh" },
-        { id: "3", label: "スマホ\n3回以上",  icon: "smartphone", meta: "10000〜20000 mAh" },
-        { id: "4", label: "iPad\nもいきたい", icon: "tablet",     meta: "10000mAh · 30W+" },
-        { id: "5", label: "パソコン\nいきたい", icon: "laptop",   meta: "20000mAh · 60W+" },
-        { id: "6", label: "Apple Watch\nいきたい", icon: "watch", meta: null },
-        { id: "7", label: "ロマン",           icon: "sparkles",  meta: "コスパ度外視" },
-        null,
-        null
+        { id: "1", label: "スマホ\n1回",        icon: "smartphone", meta: "5000 mAh" },
+        { id: "2", label: "スマホ\n2回",        icon: "smartphone", meta: "10000 mAh" },
+        { id: "3", label: "スマホ\n3回以上",    icon: "smartphone", meta: "10000〜20000 mAh" },
+        { id: "4", label: "iPad\nもいきたい",   icon: "tablet",     meta: "10000mAh · 30W+" },
+        { id: "5", label: "パソコン\nいきたい", icon: "laptop",     meta: "20000mAh · 60W+" },
+        { id: "6", label: "Apple Watch\nいきたい", icon: "watch",  meta: null },
+        { id: "7", label: "ロマン",             icon: "sparkles",   meta: "コスパ度外視" },
+        null, null
     ];
 
     const step2Groups = {
         "1_and_2": [
-            { id: "1", label: "Mag Safe\n使いたい",  icon: "magnet" },
-            { id: "2", label: "軽いのが\nいい",       icon: "feather" },
-            { id: "3", label: "うすいのが\nいい",     icon: "layers" },
-            { id: "4", label: "安全第一",             icon: "shield" },
-            { id: "5", label: "安いのが\nいい",       icon: "tag" },
-            { id: "6", label: "ケーブル\n内蔵",       icon: "cable" },
-            { id: "7", label: "コンセント\n一体",     icon: "plug" },
-            { id: "8", label: "長く\n使いたい",       icon: "battery-full" },
+            { id: "1", label: "Mag Safe\n使いたい", icon: "magnet" },
+            { id: "2", label: "軽いのが\nいい",     icon: "feather" },
+            { id: "3", label: "うすいのが\nいい",   icon: "layers" },
+            { id: "4", label: "安全第一",           icon: "shield" },
+            { id: "5", label: "安いのが\nいい",     icon: "tag" },
+            { id: "6", label: "ケーブル\n内蔵",     icon: "cable" },
+            { id: "7", label: "コンセント\n一体",   icon: "plug" },
+            { id: "8", label: "長く\n使いたい",     icon: "battery-full" },
             null
         ],
         "3": [
@@ -424,59 +506,148 @@
     };
 
     const recommendations = {
-        "1_1": { product1: "Anker 621 Magnetic Battery",               product2: "CIO SMARTCOBY SLIMII 5000mAh",       reason: "ケーブルを使わずiPhoneの背面にピタッと貼り付くので操作しやすい。" },
-        "1_2": { product1: "Anker Nano Power Bank (5000mAh, MagGo, Slim)", product2: "SMARTCOBY SLIM 5K",             reason: "超軽量でポーチやポケットに入れても全く気にならないサイズ感。" },
-        "1_3": { product1: "Anker Nano Power Bank (5000mAh, MagGo, Slim)", product2: "SMARTCOBY SLIM 5K",             reason: "超軽量でポーチやポケットに入れても全く気にならないサイズ感。" },
-        "1_4": { product1: "SMARTCOBY SLIM 5K セーフティモデル",          product2: "ケーブル一体型 半固体モバイル",     reason: "信頼の国内・大手メーカー製で多重保護回路を搭載しており安心。" },
-        "1_5": { product1: "Anker PowerCore 5000",                      product2: "シリコンパワー 5000mAh",             reason: "3000円以下の価格帯なのに信頼性の高いメーカー品。" },
-        "1_6": { product1: "Anker Nano Power Bank (Built-In)",          product2: "オウルテック ケーブル内蔵 5000",       reason: "ケーブルを忘れる心配がなく荷物を最小限に抑えられる。" },
-        "1_7": { product1: "Anker 511 Power Bank",                      product2: "エレコム AC一体型 5000mAh",          reason: "普段はスマホ充電器として使い外出時はそのまま持っていける。" },
-        "1_8": { product1: "CIO SMARTCOBY SLIMII 5000mAh（半固体）",     product2: "エレコム 半固体 5000mAh",            reason: "寿命が従来の約4倍と言われる半固体電池搭載で長寿化している。" },
+        "1_1": { product1: "Anker 621 Magnetic Battery",                   product2: "CIO SMARTCOBY SLIMII 5000mAh",             reason: "ケーブルを使わずiPhoneの背面にピタッと貼り付くので操作しやすい。" },
+        "1_2": { product1: "Anker Nano Power Bank (5000mAh, MagGo, Slim)", product2: "SMARTCOBY SLIM 5K",                         reason: "超軽量でポーチやポケットに入れても全く気にならないサイズ感。" },
+        "1_3": { product1: "Anker Nano Power Bank (5000mAh, MagGo, Slim)", product2: "SMARTCOBY SLIM 5K",                         reason: "超軽量でポーチやポケットに入れても全く気にならないサイズ感。" },
+        "1_4": { product1: "SMARTCOBY SLIM 5K セーフティモデル",            product2: "ケーブル一体型 半固体モバイル",               reason: "信頼の国内・大手メーカー製で多重保護回路を搭載しており安心。" },
+        "1_5": { product1: "Anker PowerCore 5000",                         product2: "シリコンパワー 5000mAh",                     reason: "3000円以下の価格帯なのに信頼性の高いメーカー品。" },
+        "1_6": { product1: "Anker Nano Power Bank (Built-In)",             product2: "オウルテック ケーブル内蔵 5000",               reason: "ケーブルを忘れる心配がなく荷物を最小限に抑えられる。" },
+        "1_7": { product1: "Anker 511 Power Bank",                         product2: "エレコム AC一体型 5000mAh",                  reason: "普段はスマホ充電器として使い外出時はそのまま持っていける。" },
+        "1_8": { product1: "CIO SMARTCOBY SLIMII 5000mAh（半固体）",        product2: "エレコム 半固体 5000mAh",                    reason: "寿命が従来の約4倍と言われる半固体電池搭載で長寿化している。" },
 
-        "2_1": { product1: "Anker MagGo Power Bank (10000mAh)",         product2: "SMARTCOBY Pro SLIM SS",              reason: "ワイヤレス充電はロスがあるため10000mAhあれば十分1日分使える。" },
-        "2_2": { product1: "SMARTCOBY Pro SLIM SS",                     product2: "Anker MagGo Power Bank",             reason: "10000mAhクラスとしては驚異的な薄さと軽さを実現している。" },
-        "2_3": { product1: "SMARTCOBY Pro SLIM SS",                     product2: "Anker MagGo Power Bank",             reason: "10000mAhクラスとしては驚異的な薄さと軽さを実現している。" },
-        "2_4": { product1: "ナトリウムイオン電池モバイルバッテリー",      product2: "SMARTCOBY Pro SLIM SS",              reason: "液漏れや発火リスクが極めて低い設計や高度な温度管理機能を備えている。" },
-        "2_5": { product1: "Anker PowerCore 10000",                     product2: "エレコム 薄型 10000mAh",              reason: "定番のベストセラー機で価格と性能のバランスが非常に良い。" },
-        "2_6": { product1: "Anker Power Bank (Built-In)",               product2: "CIO SMARTCOBY Pro CABLE",            reason: "長めのケーブルを持ち歩かなくて良いのでストレスフリー。" },
-        "2_7": { product1: "Anker Power Bank (10000mAh 30W Fusion)",    product2: "SMARTCOBY Pro PLUG II 67W3C",        reason: "旅行や出張時に別途充電器を持たなくて済むため荷物がすっきりする。" },
-        "2_8": { product1: "エレコム 半固体 10000mAh",                   product2: "SMARTCOBY Pro SLIM SS",              reason: "劣化しにくい長寿命バッテリー搭載で数年単位で長く使える。" },
+        "2_1": { product1: "Anker MagGo Power Bank (10000mAh)",            product2: "SMARTCOBY Pro SLIM SS",                     reason: "ワイヤレス充電はロスがあるため10000mAhあれば十分1日分使える。" },
+        "2_2": { product1: "SMARTCOBY Pro SLIM SS",                        product2: "Anker MagGo Power Bank",                    reason: "10000mAhクラスとしては驚異的な薄さと軽さを実現している。" },
+        "2_3": { product1: "SMARTCOBY Pro SLIM SS",                        product2: "Anker MagGo Power Bank",                    reason: "10000mAhクラスとしては驚異的な薄さと軽さを実現している。" },
+        "2_4": { product1: "ナトリウムイオン電池モバイルバッテリー",          product2: "SMARTCOBY Pro SLIM SS",                     reason: "液漏れや発火リスクが極めて低い設計や高度な温度管理機能を備えている。" },
+        "2_5": { product1: "Anker PowerCore 10000",                        product2: "エレコム 薄型 10000mAh",                     reason: "定番のベストセラー機で価格と性能のバランスが非常に良い。" },
+        "2_6": { product1: "Anker Power Bank (Built-In)",                  product2: "CIO SMARTCOBY Pro CABLE",                   reason: "長めのケーブルを持ち歩かなくて良いのでストレスフリー。" },
+        "2_7": { product1: "Anker Power Bank (10000mAh 30W Fusion)",       product2: "SMARTCOBY Pro PLUG II 67W3C",                reason: "旅行や出張時に別途充電器を持たなくて済むため荷物がすっきりする。" },
+        "2_8": { product1: "エレコム 半固体 10000mAh",                      product2: "SMARTCOBY Pro SLIM SS",                     reason: "劣化しにくい長寿命バッテリー搭載で数年単位で長く使える。" },
 
-        "3_1": { product1: "SMARTCOBY TRIO 35W 20000mAh",              product2: "Anker Power Bank (20000mAh)",         reason: "20000mAhの中で極限まで小型化されており持ち運びに現実的。" },
-        "3_2": { product1: "Anker 733 Power Bank (10000mAh/65W)",      product2: null, note: "※20000mAhのコンセント一体型は重すぎるため10000mAhクラスでの代用を推薦。",  reason: "大容量×コンセント内蔵は重さの問題があるため10000mAh等で代用推薦。" },
-        "3_3": { product1: "Anker Power Bank (20000mAh Built-In)",     product2: "Anker Zolo Power Bank (20000mAh Built-In)", reason: "複数回充電する際もこれ1台あれば別途ケーブル不要。" },
-        "3_4": { product1: "エレコム 20000mAh",                        product2: "Anker 335 Power Bank",                reason: "大容量だからこそ発熱や過充電を防ぐ機能がしっかりした製品。" },
-        "3_5": { product1: "シリコンパワー 20000mAh",                  product2: "エレコム 20000mAh",                   reason: "大容量でも比較的安価で手に入りかつ安全基準を満たしている。" },
-        "3_6": { product1: "SMARTCOBY TRIO 35W SS 2000",               product2: "Anker Zolo Power Bank (20000mAh)",    reason: "高品質なバッテリーセルを採用し長期間のヘビーユースにも耐える。" },
+        "3_1": { product1: "SMARTCOBY TRIO 35W 20000mAh",                  product2: "Anker Power Bank (20000mAh)",                reason: "20000mAhの中で極限まで小型化されており持ち運びに現実的。" },
+        "3_2": { product1: "Anker 733 Power Bank (10000mAh/65W)",           product2: null, note: "※20000mAhのコンセント一体型は重すぎるため10000mAhクラスでの代用を推薦。", reason: "大容量×コンセント内蔵は重さの問題があるため10000mAh等で代用推薦。" },
+        "3_3": { product1: "Anker Power Bank (20000mAh Built-In)",          product2: "Anker Zolo Power Bank (20000mAh Built-In)", reason: "複数回充電する際もこれ1台あれば別途ケーブル不要。" },
+        "3_4": { product1: "エレコム 20000mAh",                             product2: "Anker 335 Power Bank",                      reason: "大容量だからこそ発熱や過充電を防ぐ機能がしっかりした製品。" },
+        "3_5": { product1: "シリコンパワー 20000mAh",                       product2: "エレコム 20000mAh",                         reason: "大容量でも比較的安価で手に入りかつ安全基準を満たしている。" },
+        "3_6": { product1: "SMARTCOBY TRIO 35W SS 2000",                    product2: "Anker Zolo Power Bank (20000mAh)",           reason: "高品質なバッテリーセルを採用し長期間のヘビーユースにも耐える。" },
 
-        "4_1": { product1: "CIO SMARTCOBY Pro SLIM",                   product2: "Anker Power Bank (10000mAh 30W)",     reason: "iPad充電に必要な高出力を持ちながらスマホ用と遜色ないサイズ。" },
-        "4_2": { product1: "Anker Power Bank (10000mAh 30W Fusion)",   product2: "SMARTCOBY Pro PLUG II 67W3C",         reason: "iPad付属の充電器の代わりにそのままモバイルバッテリーにもなる。" },
-        "4_3": { product1: "Anker Power Bank (30W Built-In)",          product2: "CIO SMARTCOBY Pro CABLE",             reason: "荷物が減りカバンの中でケーブルが絡まるストレスから解放される。" },
-        "4_4": { product1: "エレコム 10000mAh 30W",                    product2: "Anker 533 Power Bank",                reason: "高出力時の発熱を抑える温度管理システムが優秀。" },
-        "4_5": { product1: "MOTTERU 10000mAh 30W",                     product2: "CIO SMARTCOBY Pro 30W",               reason: "30W以上の高出力モデルの中ではコストパフォーマンスが非常に高い。" },
-        "4_6": { product1: "Anker MagGo Power Bank (10000mAh)",        product2: "CIO SMARTCOBY SLIMII",                reason: "MagSafeと高出力有線ポートを両搭載しiPadとiPhoneに両対応。" },
-        "4_7": { product1: "Anker 347 Power Bank (PowerCore 40000)",   product2: "UGREEN PD3.1 モバイルバッテリー",     reason: "とにかく大容量。圧倒的な容量でスマホもiPadも何度でも充電できる。" },
+        "4_1": { product1: "CIO SMARTCOBY Pro SLIM",                        product2: "Anker Power Bank (10000mAh 30W)",            reason: "iPad充電に必要な高出力を持ちながらスマホ用と遜色ないサイズ。" },
+        "4_2": { product1: "Anker Power Bank (10000mAh 30W Fusion)",        product2: "SMARTCOBY Pro PLUG II 67W3C",                reason: "iPad付属の充電器の代わりにそのままモバイルバッテリーにもなる。" },
+        "4_3": { product1: "Anker Power Bank (30W Built-In)",               product2: "CIO SMARTCOBY Pro CABLE",                   reason: "荷物が減りカバンの中でケーブルが絡まるストレスから解放される。" },
+        "4_4": { product1: "エレコム 10000mAh 30W",                         product2: "Anker 533 Power Bank",                      reason: "高出力時の発熱を抑える温度管理システムが優秀。" },
+        "4_5": { product1: "MOTTERU 10000mAh 30W",                          product2: "CIO SMARTCOBY Pro 30W",                     reason: "30W以上の高出力モデルの中ではコストパフォーマンスが非常に高い。" },
+        "4_6": { product1: "Anker MagGo Power Bank (10000mAh)",             product2: "CIO SMARTCOBY SLIMII",                      reason: "MagSafeと高出力有線ポートを両搭載しiPadとiPhoneに両対応。" },
+        "4_7": { product1: "Anker 347 Power Bank (PowerCore 40000)",        product2: "UGREEN PD3.1 モバイルバッテリー",            reason: "とにかく大容量。圧倒的な容量でスマホもiPadも何度でも充電できる。" },
 
-        "5_1": { product1: "CIO SMARTCOBY TRIO 67W",                   product2: "Anker 537 Power Bank (PowerCore)",    reason: "PCを充電できる高出力モデルの中でギリギリ普段持ち歩けるサイズ感。" },
-        "5_2": { product1: "Anker 733 Power Bank (コンセント時65W)",    product2: "Anker Power Bank (20000mAh, 87W, Built-In)", reason: "コンセント接続時に高出力を発揮するモデルがPC用途に現実的。" },
-        "5_3": { product1: "CIO SMARTCOBY Pro CABLE 100W 2",           product2: null,                                  reason: "PC充電用の太いケーブルを忘れる心配がない。" },
-        "5_4": { product1: "Anker Prime Power Bank (20000mAh 200W)",   product2: "エレコム 20000mAh 65W",               reason: "PC充電の大きな電力負荷にも耐えうる強固な安全回路を搭載。" },
-        "5_5": { product1: "CIO SMARTCOBY TRIO 67W",                   product2: "Anker 537 Power Bank (PowerCore 24000, 65W)", reason: "高出力モデルは高価になりがちだが1万円前後で買える優秀なモデル。" },
-        "5_6": { product1: "Anker Prime Power Bank (20000mAh 200W)",   product2: "Anker MagGo Power Bank (10000mAh)",   reason: "高出力USB-CでPCを充電しながらMagSafe対応のiPhone充電も両立できる。" },
-        "5_7": { product1: "CIO SMARTCOBY TRIO 67W",                   product2: "Anker Power Bank (12000mAh)",          reason: "高寿命に耐える高品質なセルとディスプレイでの状態管理が可能。" },
+        "5_1": { product1: "CIO SMARTCOBY TRIO 67W",                        product2: "Anker 537 Power Bank (PowerCore)",           reason: "PCを充電できる高出力モデルの中でギリギリ普段持ち歩けるサイズ感。" },
+        "5_2": { product1: "Anker 733 Power Bank (コンセント時65W)",         product2: "Anker Power Bank (20000mAh, 87W, Built-In)", reason: "コンセント接続時に高出力を発揮するモデルがPC用途に現実的。" },
+        "5_3": { product1: "CIO SMARTCOBY Pro CABLE 100W 2",                product2: null,                                        reason: "PC充電用の太いケーブルを忘れる心配がない。" },
+        "5_4": { product1: "Anker Prime Power Bank (20000mAh 200W)",        product2: "エレコム 20000mAh 65W",                     reason: "PC充電の大きな電力負荷にも耐えうる強固な安全回路を搭載。" },
+        "5_5": { product1: "CIO SMARTCOBY TRIO 67W",                        product2: "Anker 537 Power Bank (PowerCore 24000, 65W)", reason: "高出力モデルは高価になりがちだが1万円前後で買える優秀なモデル。" },
+        "5_6": { product1: "Anker Prime Power Bank (20000mAh 200W)",        product2: "Anker MagGo Power Bank (10000mAh)",          reason: "高出力USB-CでPCを充電しながらMagSafe対応のiPhone充電も両立できる。" },
+        "5_7": { product1: "CIO SMARTCOBY TRIO 67W",                        product2: "Anker Power Bank (12000mAh)",                reason: "高寿命に耐える高品質なセルとディスプレイでの状態管理が可能。" },
 
-        "6_1": { product1: "SMARTCOBY DUAL 950mAh",                    product2: "Belkin BOOST↑CHARGE AW用",           reason: "Apple Watchに特化しており極めてコンパクトで持ち運びに便利。" },
-        "6_2": { product1: "SMARTCOBY Ex02 Wireless Charger",          product2: "Belkin 2-in-1 Power Bank",            reason: "スマホを1回充電しつつApple Watchも同時に充電できる。" },
-        "6_3": { product1: "Anker MagGo Power Bank (10000mAh, 35W, For Apple Watch)", product2: null,                   reason: "同等スペック他社製品が少なく、これ1台でiPhone複数回とApple Watchの急速充電が完結する。" },
+        "6_1": { product1: "SMARTCOBY DUAL 950mAh",                         product2: "Belkin BOOST↑CHARGE AW用",                  reason: "Apple Watchに特化しており極めてコンパクトで持ち運びに便利。" },
+        "6_2": { product1: "SMARTCOBY Ex02 Wireless Charger",               product2: "Belkin 2-in-1 Power Bank",                  reason: "スマホを1回充電しつつApple Watchも同時に充電できる。" },
+        "6_3": { product1: "Anker MagGo Power Bank (10000mAh, 35W, For Apple Watch)", product2: null,                              reason: "同等スペック他社製品が少なく、これ1台でiPhone複数回とApple Watchの急速充電が完結する。" },
 
-        "7_1": { product1: "Anker Prime Power Bank (26250mAh, 300W)",  product2: "SMARTCOBY Pro CABLE 100W 2",          reason: "超大容量・超高出力・ディスプレイ搭載など現行最高峰のロマン。" },
-        "7_2": { product1: "SMARTCOBY ULTRA SLIM 3K",                  product2: null,                                  reason: "世界最薄クラス。スマホ1回分に満たない容量だが、Appleの「探す」機能が付いてくる。" }
+        "7_1": { product1: "Anker Prime Power Bank (26250mAh, 300W)",       product2: "SMARTCOBY Pro CABLE 100W 2",                reason: "超大容量・超高出力・ディスプレイ搭載など現行最高峰のロマン。" },
+        "7_2": { product1: "SMARTCOBY ULTRA SLIM 3K",                       product2: null,                                        reason: "世界最薄クラス。スマホ1回分に満たない容量だが、Appleの「探す」機能が付いてくる。" }
     };
 
+    /* ===================== CONFETTI ===================== */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiRaf = null;
+
+    function resizeCanvas() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function spawnConfetti() {
+        confettiParticles = [];
+        const colors = ['#667eea','#2563EB','#06b6d4','#10b981','#f59e0b','#ef4444','#a855f7','#ec4899'];
+        for (let i = 0; i < 130; i++) {
+            confettiParticles.push({
+                x: Math.random() * canvas.width,
+                y: -10,
+                vx: (Math.random() - 0.5) * 6,
+                vy: Math.random() * 4 + 2,
+                size: Math.random() * 9 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * Math.PI * 2,
+                rotSpeed: (Math.random() - 0.5) * 0.2,
+                shape: Math.random() > 0.5 ? 'rect' : 'circle'
+            });
+        }
+        if (confettiRaf) cancelAnimationFrame(confettiRaf);
+        drawConfetti();
+    }
+
+    function drawConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettiParticles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.12;
+            p.rotation += p.rotSpeed;
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rotation);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = Math.max(0, 1 - p.y / (canvas.height * 0.9));
+            if (p.shape === 'rect') {
+                ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+            } else {
+                ctx.beginPath();
+                ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        });
+        confettiParticles = confettiParticles.filter(p => p.y < canvas.height + 20);
+        if (confettiParticles.length > 0) {
+            confettiRaf = requestAnimationFrame(drawConfetti);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    /* ===================== RIPPLE ===================== */
+    function addRipple(card, e) {
+        const rect = card.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = (e.clientX - rect.left) - size / 2;
+        const y = (e.clientY - rect.top)  - size / 2;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+        card.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
+    }
+
+    /* ===================== TYPEWRITER ===================== */
+    function typewriter(el, text, speed = 22) {
+        el.textContent = '';
+        let i = 0;
+        const tick = () => {
+            if (i < text.length) {
+                el.textContent += text[i++];
+                setTimeout(tick, speed);
+            }
+        };
+        tick();
+    }
+
+    /* ===================== UI HELPERS ===================== */
     let selectedStep1 = null;
 
-    function amazonSearchUrl(productName) {
-        return 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(productName);
+    function amazonSearchUrl(name) {
+        return 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(name);
     }
 
     function reflow(el) { void el.offsetHeight; }
@@ -488,26 +659,32 @@
         el.classList.add(animClass);
     }
 
-    function buildStep1Grid() {
-        const grid = document.getElementById('step1-grid');
+    function buildCards(grid, items, clickHandler) {
         grid.innerHTML = '';
-        step1Options.forEach((opt, i) => {
+        items.forEach((opt, i) => {
             const card = document.createElement('div');
             if (!opt) {
                 card.className = 'step-card empty';
+                card.style.setProperty('--delay', `${i * 0.045}s`);
                 grid.appendChild(card);
                 return;
             }
-            card.className = 'step-card';
+            card.className = 'step-card' + (opt.warning ? ' warning' : '');
+            card.style.setProperty('--delay', `${i * 0.045}s`);
             card.innerHTML = `
                 <span class="card-num">${opt.id}</span>
                 <span class="card-icon"><i data-lucide="${opt.icon}"></i></span>
                 <span class="card-label">${opt.label.replace(/\n/g, '<br>')}</span>
                 ${opt.meta ? `<span class="card-meta">${opt.meta}</span>` : ''}
             `;
-            card.addEventListener('click', () => selectStep1(opt.id, card));
+            card.addEventListener('click', e => { addRipple(card, e); clickHandler(opt.id, card); });
             grid.appendChild(card);
         });
+    }
+
+    /* ===================== STEP 1 ===================== */
+    function buildStep1Grid() {
+        buildCards(document.getElementById('step1-grid'), step1Options, selectStep1);
     }
 
     function selectStep1(id, clickedCard) {
@@ -518,34 +695,21 @@
         const groupKey = (id === '1' || id === '2') ? '1_and_2' : id;
         const features = step2Groups[groupKey] || [];
 
-        const grid = document.getElementById('step2-grid');
-        grid.innerHTML = '';
-
-        features.forEach(feat => {
-            const card = document.createElement('div');
-            if (!feat) {
-                card.className = 'step-card empty';
-                grid.appendChild(card);
-                return;
-            }
-            card.className = 'step-card' + (feat.warning ? ' warning' : '');
-            card.innerHTML = `
-                <span class="card-num">${feat.id}</span>
-                <span class="card-icon"><i data-lucide="${feat.icon}"></i></span>
-                <span class="card-label">${feat.label.replace(/\n/g, '<br>')}</span>
-            `;
-            card.addEventListener('click', () => selectStep2(feat.id, card));
-            grid.appendChild(card);
-        });
+        buildCards(document.getElementById('step2-grid'), features, selectStep2);
 
         const step2 = document.getElementById('step2-section');
         showWithAnim(step2, 'anim-slide-down');
-
         document.getElementById('result-section').style.display = 'none';
 
         lucide.createIcons();
-
         setTimeout(() => step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+    }
+
+    /* ===================== STEP 2 ===================== */
+    const cartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>';
+
+    function buyBtn(name) {
+        return `<a class="buy-btn" href="${amazonSearchUrl(name)}" target="_blank" rel="noopener noreferrer">${cartSvg}Amazonで見る</a>`;
     }
 
     function selectStep2(featureId, clickedCard) {
@@ -556,58 +720,48 @@
         const rec = recommendations[key];
         const resultSection = document.getElementById('result-section');
 
-        if (!rec) {
-            resultSection.style.display = 'none';
-            return;
-        }
+        if (!rec) { resultSection.style.display = 'none'; return; }
 
         const hasTwoProducts = rec.product2 && rec.product2.trim() !== '';
 
-        const cartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>';
-        const amazonBtn = (name) => `
-            <a class="buy-btn" href="${amazonSearchUrl(name)}" target="_blank" rel="noopener noreferrer">
-                ${cartSvg}Amazonで見る
-            </a>`;
-
-        let cardsHTML = `
+        const cardsHTML = `
             <div class="product-cards${hasTwoProducts ? '' : ' single'}">
                 <div class="product-card primary">
                     <div class="product-card-label"><i data-lucide="package"></i>おすすめ①</div>
                     <div class="product-name">${rec.product1}</div>
-                    ${amazonBtn(rec.product1)}
+                    ${buyBtn(rec.product1)}
                 </div>
                 ${hasTwoProducts ? `
                 <div class="product-card secondary">
                     <div class="product-card-label"><i data-lucide="package-2"></i>おすすめ②</div>
                     <div class="product-name">${rec.product2}</div>
-                    ${amazonBtn(rec.product2)}
+                    ${buyBtn(rec.product2)}
                 </div>` : ''}
-            </div>
-        `;
+            </div>`;
 
         const noteHTML = rec.note ? `
             <div class="note-box">
                 <i data-lucide="alert-triangle"></i>
                 <span>${rec.note}</span>
-            </div>
-        ` : '';
+            </div>` : '';
 
         const reasonHTML = `
             <div class="reason-box">
                 <div class="reason-label"><i data-lucide="info"></i>おすすめ理由</div>
-                <div class="reason-text">${rec.reason}</div>
-            </div>
-        `;
+                <div class="reason-text" id="reason-text"></div>
+            </div>`;
 
         document.getElementById('result-box').innerHTML = cardsHTML + noteHTML + reasonHTML;
-
         showWithAnim(resultSection, 'anim-fade-up');
-
         lucide.createIcons();
+
+        setTimeout(() => typewriter(document.getElementById('reason-text'), rec.reason), 350);
+        spawnConfetti();
 
         setTimeout(() => resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
     }
 
+    /* ===================== INIT ===================== */
     buildStep1Grid();
     lucide.createIcons();
 </script>
