@@ -1,0 +1,207 @@
+{
+  "diagnostic_chart": {
+    "step_1": {
+      "title": "用途",
+      "options": [
+        {
+          "id": "1",
+          "usage": "スマホ 1回",
+          "capacity": "5000 mAh"
+        },
+        {
+          "id": "2",
+          "usage": "スマホ 2回",
+          "capacity": "10000 mAh"
+        },
+        {
+          "id": "3",
+          "usage": "スマホ 3回以上",
+          "capacity": "10000~20000 mAh"
+        },
+        {
+          "id": "4",
+          "usage": "iPad もいきたい",
+          "capacity": "10000mAh",
+          "output": "最大出力 30w以上"
+        },
+        {
+          "id": "5",
+          "usage": "パソコン いきたい",
+          "capacity": "20000 mAh",
+          "output": "最大出力 60W以上"
+        },
+        {
+          "id": "6",
+          "usage": "Apple Watch いきたい"
+        },
+        {
+          "id": "7",
+          "usage": "コスパ度外視ロマン 品"
+        }
+      ]
+    },
+    "step_2": {
+      "title": "あったらいいな",
+      "options_by_step_1_selection": {
+        "1_and_2": {
+          "group_id": "①②",
+          "features": [
+            {
+              "id": "1",
+              "feature": "Mag Safe 使いたい"
+            },
+            {
+              "id": "2",
+              "feature": "軽いのが いい"
+            },
+            {
+              "id": "3",
+              "feature": "うすいのが いい"
+            },
+            {
+              "id": "4",
+              "feature": "安全第一"
+            },
+            {
+              "id": "5",
+              "feature": "安いのが いい"
+            },
+            {
+              "id": "6",
+              "feature": "ケーブル 内蔵"
+            },
+            {
+              "id": "7",
+              "feature": "コンセント 一体"
+            },
+            {
+              "id": "8",
+              "feature": "長く 使いたい"
+            }
+          ]
+        },
+        "3": {
+          "group_id": "③",
+          "features": [
+            {
+              "id": "1",
+              "feature": "軽いのが いい"
+            },
+            {
+              "id": "2",
+              "feature": "コンセント 一体"
+            },
+            {
+              "id": "3",
+              "feature": "ケーブル 内蔵"
+            },
+            {
+              "id": "4",
+              "feature": "安全第一"
+            },
+            {
+              "id": "5",
+              "feature": "安いのが いい"
+            },
+            {
+              "id": "6",
+              "feature": "長く 使いたい"
+            }
+          ]
+        },
+        "4": {
+          "group_id": "④",
+          "features": [
+            {
+              "id": "1",
+              "feature": "軽いのが いい"
+            },
+            {
+              "id": "2",
+              "feature": "コンセント 一体"
+            },
+            {
+              "id": "3",
+              "feature": "ケーブル 内蔵"
+            },
+            {
+              "id": "4",
+              "feature": "安全第一"
+            },
+            {
+              "id": "5",
+              "feature": "安いのが いい"
+            },
+            {
+              "id": "6",
+              "feature": "Mag Safe 使いたい"
+            },
+            {
+              "id": "7",
+              "feature": "大容量"
+            }
+          ]
+        },
+        "5": {
+          "group_id": "⑤",
+          "features": [
+            {
+              "id": "1",
+              "feature": "軽いのが いい"
+            },
+            {
+              "id": "2",
+              "feature": "コンセント 一体"
+            },
+            {
+              "id": "3",
+              "feature": "ケーブル 内蔵"
+            },
+            {
+              "id": "4",
+              "feature": "安全第一"
+            },
+            {
+              "id": "5",
+              "feature": "安いのが いい"
+            },
+            {
+              "id": "6",
+              "feature": "Mag Safe 使いたい"
+            },
+            {
+              "id": "7",
+              "feature": "長く 使いたい"
+            }
+          ]
+        },
+        "6": {
+          "group_id": "⑥",
+          "features": [
+            {
+              "id": "1",
+              "feature": "Watch 専用"
+            },
+            {
+              "id": "2",
+              "feature": "スマホも いける 1回"
+            },
+            {
+              "id": "3",
+              "feature": "スマホも いける 2回"
+            }
+          ]
+        },
+        "7": {
+          "group_id": "⑦",
+          "features": [
+            {
+              "id": "1",
+              "feature": "とにかく 最強"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
