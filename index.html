@@ -252,6 +252,26 @@
         }
         .product-card.secondary .product-name { font-weight: 600; color: #374151; }
 
+        .amazon-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 14px;
+            background: #FF9900;
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .amazon-btn:hover {
+            background: #E88A00;
+            transform: translateY(-1px);
+        }
+        .amazon-btn svg { width: 13px; height: 13px; }
+
         .reason-box {
             background: #F8FAFC;
             border-left: 4px solid var(--primary);
@@ -455,6 +475,10 @@
 
     let selectedStep1 = null;
 
+    function amazonSearchUrl(productName) {
+        return 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(productName);
+    }
+
     function reflow(el) { void el.offsetHeight; }
 
     function showWithAnim(el, animClass) {
@@ -539,16 +563,23 @@
 
         const hasTwoProducts = rec.product2 && rec.product2.trim() !== '';
 
+        const amazonBtn = (name) => `
+            <a class="amazon-btn" href="${amazonSearchUrl(name)}" target="_blank" rel="noopener noreferrer">
+                <i data-lucide="shopping-cart"></i>Amazonで見る
+            </a>`;
+
         let cardsHTML = `
             <div class="product-cards${hasTwoProducts ? '' : ' single'}">
                 <div class="product-card primary">
                     <div class="product-card-label"><i data-lucide="package"></i>おすすめ①</div>
                     <div class="product-name">${rec.product1}</div>
+                    ${amazonBtn(rec.product1)}
                 </div>
                 ${hasTwoProducts ? `
                 <div class="product-card secondary">
                     <div class="product-card-label"><i data-lucide="package-2"></i>おすすめ②</div>
                     <div class="product-name">${rec.product2}</div>
+                    ${amazonBtn(rec.product2)}
                 </div>` : ''}
             </div>
         `;
