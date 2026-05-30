@@ -252,6 +252,26 @@
         }
         .product-card.secondary .product-name { font-weight: 600; color: #374151; }
 
+        .buy-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 14px;
+            background: #FF9900;
+            color: #111827;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.15s ease, transform 0.15s ease;
+        }
+        .buy-btn:hover {
+            background: #E88A00;
+            transform: translateY(-1px);
+        }
+        .buy-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
         .reason-box {
             background: #F8FAFC;
             border-left: 4px solid var(--primary);
@@ -455,6 +475,10 @@
 
     let selectedStep1 = null;
 
+    function amazonSearchUrl(productName) {
+        return 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(productName);
+    }
+
     function reflow(el) { void el.offsetHeight; }
 
     function showWithAnim(el, animClass) {
@@ -539,16 +563,24 @@
 
         const hasTwoProducts = rec.product2 && rec.product2.trim() !== '';
 
+        const cartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>';
+        const amazonBtn = (name) => `
+            <a class="buy-btn" href="${amazonSearchUrl(name)}" target="_blank" rel="noopener noreferrer">
+                ${cartSvg}Amazonで見る
+            </a>`;
+
         let cardsHTML = `
             <div class="product-cards${hasTwoProducts ? '' : ' single'}">
                 <div class="product-card primary">
                     <div class="product-card-label"><i data-lucide="package"></i>おすすめ①</div>
                     <div class="product-name">${rec.product1}</div>
+                    ${amazonBtn(rec.product1)}
                 </div>
                 ${hasTwoProducts ? `
                 <div class="product-card secondary">
                     <div class="product-card-label"><i data-lucide="package-2"></i>おすすめ②</div>
                     <div class="product-name">${rec.product2}</div>
+                    ${amazonBtn(rec.product2)}
                 </div>` : ''}
             </div>
         `;
