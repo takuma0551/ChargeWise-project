@@ -252,7 +252,7 @@
         }
         .product-card.secondary .product-name { font-weight: 600; color: #374151; }
 
-        .amazon-btn {
+        .buy-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
@@ -266,11 +266,11 @@
             border-radius: 8px;
             transition: background 0.15s ease, transform 0.15s ease;
         }
-        .amazon-btn:hover {
+        .buy-btn:hover {
             background: #E88A00;
             transform: translateY(-1px);
         }
-        .amazon-btn svg { width: 13px; height: 13px; }
+        .buy-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
 
         .reason-box {
             background: #F8FAFC;
@@ -563,9 +563,10 @@
 
         const hasTwoProducts = rec.product2 && rec.product2.trim() !== '';
 
+        const cartSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>';
         const amazonBtn = (name) => `
-            <a class="amazon-btn" href="${amazonSearchUrl(name)}" target="_blank" rel="noopener noreferrer">
-                <i data-lucide="shopping-cart"></i>Amazonで見る
+            <a class="buy-btn" href="${amazonSearchUrl(name)}" target="_blank" rel="noopener noreferrer">
+                ${cartSvg}Amazonで見る
             </a>`;
 
         let cardsHTML = `
