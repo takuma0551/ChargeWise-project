@@ -1,1 +1,298 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モバイルバッテリー診断チャート</title>
+    <style>
+        :root {
+            --primary: #2563EB;
+            --bg: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --border: #E5E7EB;
+        }
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 40px;
+            color: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+            color: var(--primary);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: #93C5FD;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+        .card.active {
+            border-color: var(--primary);
+            background-color: #EFF6FF;
+        }
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+        .card-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        #step2-container {
+            display: none;
+            animation: fadeIn 0.4s ease;
+            background: #F8FAFC;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .feature-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .feature-tag {
+            background: #FFFFFF;
+            color: #374151;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .feature-tag:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .feature-id {
+            color: var(--primary);
+            margin-right: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔋 モバイルバッテリー診断</h1>
+        
+        <div id="step1-container">
+            <div class="step-title">1. 用途を教えてください</div>
+            <div class="grid" id="step1-grid">
+                </div>
+        </div>
 
+        <div id="step2-container">
+            <div class="step-title">2. あったらいいな（付加機能）</div>
+            <p style="font-size: 14px; color: #6B7280; margin-bottom: 16px;">Step 1で選んだ用途に合わせて、以下のオプションから選べます（2つまで）</p>
+            <div class="feature-tags" id="step2-tags">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+          "diagnostic_chart": {
+            "step_1": {
+              "title": "用途",
+              "options": [
+                {
+                  "id": "1",
+                  "usage": "スマホ 1回",
+                  "capacity": "5000 mAh"
+                },
+                {
+                  "id": "2",
+                  "usage": "スマホ 2回",
+                  "capacity": "10000 mAh"
+                },
+                {
+                  "id": "3",
+                  "usage": "スマホ 3回以上",
+                  "capacity": "10000~20000 mAh"
+                },
+                {
+                  "id": "4",
+                  "usage": "iPad もいきたい",
+                  "capacity": "10000mAh",
+                  "output": "最大出力 30w以上"
+                },
+                {
+                  "id": "5",
+                  "usage": "パソコン いきたい",
+                  "capacity": "20000 mAh",
+                  "output": "最大出力 60W以上"
+                },
+                {
+                  "id": "6",
+                  "usage": "Apple Watch いきたい"
+                },
+                {
+                  "id": "7",
+                  "usage": "コスパ度外視ロマン 品"
+                }
+              ]
+            },
+            "step_2": {
+              "title": "あったらいいな",
+              "options_by_step_1_selection": {
+                "1_and_2": {
+                  "group_id": "①②",
+                  "features": [
+                    { "id": "1", "feature": "Mag Safe 使いたい" },
+                    { "id": "2", "feature": "軽いのが いい" },
+                    { "id": "3", "feature": "うすいのが いい" },
+                    { "id": "4", "feature": "安全第一" },
+                    { "id": "5", "feature": "安いのが いい" },
+                    { "id": "6", "feature": "ケーブル 内蔵" },
+                    { "id": "7", "feature": "コンセント 一体" },
+                    { "id": "8", "feature": "長く 使いたい" }
+                  ]
+                },
+                "3": {
+                  "group_id": "③",
+                  "features": [
+                    { "id": "1", "feature": "軽いのが いい" },
+                    { "id": "2", "feature": "コンセント 一体" },
+                    { "id": "3", "feature": "ケーブル 内蔵" },
+                    { "id": "4", "feature": "安全第一" },
+                    { "id": "5", "feature": "安いのが いい" },
+                    { "id": "6", "feature": "長く 使いたい" }
+                  ]
+                },
+                "4": {
+                  "group_id": "④",
+                  "features": [
+                    { "id": "1", "feature": "軽いのが いい" },
+                    { "id": "2", "feature": "コンセント 一体" },
+                    { "id": "3", "feature": "ケーブル 内蔵" },
+                    { "id": "4", "feature": "安全第一" },
+                    { "id": "5", "feature": "安いのが いい" },
+                    { "id": "6", "feature": "Mag Safe 使いたい" },
+                    { "id": "7", "feature": "大容量" }
+                  ]
+                },
+                "5": {
+                  "group_id": "⑤",
+                  "features": [
+                    { "id": "1", "feature": "軽いのが いい" },
+                    { "id": "2", "feature": "コンセント 一体" },
+                    { "id": "3", "feature": "ケーブル 内蔵" },
+                    { "id": "4", "feature": "安全第一" },
+                    { "id": "5", "feature": "安いのが いい" },
+                    { "id": "6", "feature": "Mag Safe 使いたい" },
+                    { "id": "7", "feature": "長く 使いたい" }
+                  ]
+                },
+                "6": {
+                  "group_id": "⑥",
+                  "features": [
+                    { "id": "1", "feature": "Watch 専用" },
+                    { "id": "2", "feature": "スマホも いける 1回" },
+                    { "id": "3", "feature": "スマホも いける 2回" }
+                  ]
+                },
+                "7": {
+                  "group_id": "⑦",
+                  "features": [
+                    { "id": "1", "feature": "とにかく 最強" }
+                  ]
+                }
+              }
+            }
+          }
+        };
+
+        const step1Grid = document.getElementById('step1-grid');
+        const step2Container = document.getElementById('step2-container');
+        const step2Tags = document.getElementById('step2-tags');
+
+        data.diagnostic_chart.step_1.options.forEach(opt => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-title"><span style="color: #2563EB;">${opt.id}.</span> ${opt.usage}</div>
+                ${opt.capacity ? `<div class="card-desc">🔋 容量: ${opt.capacity}</div>` : ''}
+                ${opt.output ? `<div class="card-desc">⚡ 出力: ${opt.output}</div>` : ''}
+            `;
+            card.onclick = () => selectStep1(opt.id, card);
+            step1Grid.appendChild(card);
+        });
+
+        function selectStep1(id, selectedCard) {
+            document.querySelectorAll('#step1-grid .card').forEach(c => c.classList.remove('active'));
+            selectedCard.classList.add('active');
+            
+            let groupKey = '';
+            if (id === '1' || id === '2') groupKey = '1_and_2';
+            else if (['3','4','5','6','7'].includes(id)) groupKey = id;
+
+            const featuresData = data.diagnostic_chart.step_2.options_by_step_1_selection[groupKey];
+            
+            step2Tags.innerHTML = '';
+            if (featuresData && featuresData.features) {
+                featuresData.features.forEach(f => {
+                    const tag = document.createElement('div');
+                    tag.className = 'feature-tag';
+                    const idSpan = f.id && f.id !== 'None' ? `<span class="feature-id">${f.id}.</span>` : '';
+                    tag.innerHTML = `${idSpan}${f.feature}`;
+                    step2Tags.appendChild(tag);
+                });
+                step2Container.style.display = 'block';
+            } else {
+                step2Container.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
