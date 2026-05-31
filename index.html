@@ -574,6 +574,10 @@
     /* ===================== UI HELPERS ===================== */
     let selectedStep1 = null;
 
+    function tryCreateIcons() {
+        try { lucide.createIcons(); } catch (_) {}
+    }
+
     function amazonSearchUrl(name) {
         return 'https://www.amazon.co.jp/s?k=' + encodeURIComponent(name);
     }
@@ -629,7 +633,7 @@
         showWithAnim(step2, 'anim-slide-down');
         document.getElementById('result-section').style.display = 'none';
 
-        lucide.createIcons();
+        tryCreateIcons();
         setTimeout(() => step2.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
     }
 
@@ -681,7 +685,7 @@
 
         document.getElementById('result-box').innerHTML = cardsHTML + noteHTML + reasonHTML;
         showWithAnim(resultSection, 'anim-fade-up');
-        lucide.createIcons();
+        tryCreateIcons();
 
         setTimeout(() => typewriter(document.getElementById('reason-text'), rec.reason), 350);
 
@@ -690,7 +694,7 @@
 
     /* ===================== INIT ===================== */
     buildStep1Grid();
-    lucide.createIcons();
+    tryCreateIcons();
 </script>
 </body>
 </html>
